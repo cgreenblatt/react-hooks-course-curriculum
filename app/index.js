@@ -15,7 +15,7 @@ function ThemedApp () {
   return (
     <div className={theme}>
       <div className='container'>
-        <Nav />
+        <Nav /> 
         <React.Suspense fallback={<Loading />}>
           <Routes>
             <Route
