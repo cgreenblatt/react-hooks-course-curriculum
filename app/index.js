@@ -1,7 +1,7 @@
 import React from 'react'
-import ReactDOM from 'react-dom'
+import * as ReactDOM from 'react-dom/client';
 import './index.css'
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom'
 import { ThemeProvider } from './contexts/theme'
 import Loading from './components/Loading'
 import Nav from './components/Nav'
@@ -28,20 +28,18 @@ class App extends React.Component {
               <Nav />
 
               <React.Suspense fallback={<Loading />}>
-                <Switch>
+                <Routes>
                   <Route
-                    exact
                     path='/'
-                    render={() => <Posts type='top' />}
+                    element={<Posts type='top'/>}
                   />
                   <Route
                     path='/new'
-                    render={() => <Posts type='new' />}
+                    element={<Posts type='new'/>}
                   />
-                  <Route path='/post' component={Post} />
-                  <Route path='/user' component={User} />
-                  <Route render={() => <h1>404</h1>} />
-                </Switch>
+                  <Route path='/post' element={<Post />} />
+                  <Route path='/user' element={<User />} />
+                </Routes>
               </React.Suspense>
             </div>
           </div>
@@ -51,7 +49,6 @@ class App extends React.Component {
   }
 }
 
-ReactDOM.render(
-  <App />,
-  document.getElementById('app')
-)
+const rootElement = document.getElementById("app");
+const root = ReactDOM.createRoot(rootElement);
+root.render(<App />);
