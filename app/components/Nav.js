@@ -2,10 +2,6 @@ import React from 'react'
 import { ThemeConsumer } from '../contexts/theme'
 import { NavLink } from 'react-router-dom'
 
-const activeStyle = {
-  color: 'rgb(187, 46, 31)'
-}
-
 export default function Nav () {
   return (
     <ThemeConsumer>
@@ -15,17 +11,17 @@ export default function Nav () {
             <li>
               <NavLink
                 to='/'
-                exact
-                activeStyle={activeStyle}
-                className='nav-link'>
+
+                className={({ isActive }) => `nav-link ${isActive ? 'nav-link--color' : ''}`}
+              >
                   Top
               </NavLink>
             </li>
             <li>
               <NavLink
                 to='/new'
-                activeStyle={activeStyle}
-                className='nav-link'>
+                className={({ isActive }) => `nav-link ${isActive ? 'nav-link--color' : ''}`}
+              >
                   New
               </NavLink>
             </li>

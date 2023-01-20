@@ -58,6 +58,10 @@ li {
   color: inherit;
 }
 
+.nav-link--color {
+  color: rgb(187, 46, 31)
+}
+
 .nav li {
   margin-right: 10px;
 }
