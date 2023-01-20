@@ -1,6 +1,20 @@
-import React from 'react'
+import React, { useContext, useState} from 'react'
 
-const { Consumer, Provider } = React.createContext()
+const ThemeContext = React.createContext();
 
-export const ThemeConsumer = Consumer
-export const ThemeProvider = Provider
+export function useThemeContext() {
+    const contextValue = useContext(ThemeContext);
+    if (!contextValue) {
+        throw new Error(
+            'useThemeContext must be called within an ThemeContextProvider'
+        );
+    }
+    return contextValue;
+}
+
+export function ThemeContextProvider(props) {
+    const [theme, setTheme] = useState('light');
+    const toggleTheme = () => setTheme((theme) => theme === 'light' ? 'dark' : 'light');
+    const value = [theme, toggleTheme];
+    return <ThemeContext.Provider value={value} {...props} />
+}
