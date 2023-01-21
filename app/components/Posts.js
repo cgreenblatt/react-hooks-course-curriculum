@@ -22,7 +22,6 @@ export default function Posts({ type }) {
     .catch(({ message }) => dispatch({ type: 'error', message }))
   }, [type])
 
-    console.log(state);
   const { posts, error, loading } = state;
 
   if (loading === true) {
