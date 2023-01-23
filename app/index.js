@@ -26,8 +26,8 @@ function ThemedApp () {
               path='/new'
               element={<Posts type='new'/>}
             />
-            <Route path='/post' element={<Post />} />
-            <Route path='/user' element={<User />} />
+            <Route path='post' element={<Post />} />
+            <Route path='user' element={<User />} />
           </Routes>
         </React.Suspense>
       </div>
