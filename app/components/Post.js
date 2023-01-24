@@ -1,40 +1,59 @@
-import React from 'react'
-import queryString from 'query-string'
-import { fetchItem, fetchPosts, fetchComments } from '../utils/api'
+import React, { useEffect, useReducer } from 'react'
+import { useSearchParams } from 'react-router-dom';
+import { fetchItem, fetchComments } from '../utils/api'
 import Loading from './Loading'
 import PostMetaInfo from './PostMetaInfo'
 import Title from './Title'
 import Comment from './Comment'
 
-export default class Post extends React.Component {
-  state = {
-    post: null,
-    loadingPost: true,
-    comments: null,
-    loadingComments: true,
-    error: null,
+const reducer = (state, action) => {
+  switch(action.type) {
+    case 'init': return initialState
+    case 'post' : return {
+      ...state,
+      loadingPost: false,
+      post: action.post,
+    }
+    case 'comments': return {
+      ...state,
+      loadingComments: false,
+      comments: action.comments,
+    }
+    case 'error': return {
+      ...state,
+      loadingComments: false,
+      loadingPost: false,
+      error: action.error,
+    }
+    default: throw Error(`Action ${action.type} is not supported`)
   }
-  componentDidMount() {
-    const { id } = queryString.parse(this.props.location.search)
+}
 
+const initialState = {
+  post: null,
+  loadingPost: true,
+  comments: null,
+  loadingComments: true,
+  error: ''
+}
+
+export default function Post() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+  const [sp] = useSearchParams();
+  const id = sp.get('id');
+
+  useEffect(() => {
+    dispatch({ type: 'init' });
     fetchItem(id)
-      .then((post) => {
-        this.setState({ post, loadingPost: false })
+    .then((post) => {
+      dispatch({ type: 'post', post });
+      return fetchComments(post.kids || [])
+    })
+    .then((comments) => dispatch({ type: 'comments', comments }))
+    .catch(({ message }) => dispatch({ type: 'error', error: message }));
+  }, [id])
 
-        return fetchComments(post.kids || [])
-      })
-      .then((comments) => this.setState({
-        comments,
-        loadingComments: false
-      }))
-      .catch(({ message }) => this.setState({
-        error: message,
-        loadingPost: false,
-        loadingComments: false
-      }))
-  }
-  render() {
-    const { post, loadingPost, comments, loadingComments, error } = this.state
+  const { post, loadingPost, comments, loadingComments, error } = state;
 
     if (error) {
       return <p className='center-text error'>{error}</p>
@@ -68,5 +87,4 @@ export default class Post extends React.Component {
             </React.Fragment>}
       </React.Fragment>
     )
-  }
 }
