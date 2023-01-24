@@ -7,6 +7,7 @@ import PostsList from './PostsList'
 
 const reducer = (state, action) => {
   switch(action.type) {
+    case 'init' : return initialState
     case 'posts': return {
       ...state,
       posts: action.posts,
@@ -41,6 +42,7 @@ export default function User() {
   const id = sp.get('id');
 
   useEffect(() => {
+    dispatch({ type: 'init' })
     fetchUser(id)
       .then((user) => {
         dispatch({ type: 'user', user })
